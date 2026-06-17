@@ -158,7 +158,7 @@ struct DockOverlayCrossPrivate
      */
     qreal dropIndicatiorWidth(QLabel* l) const
     {
-    #if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    #if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
         Q_UNUSED(l)
         return 40;
     #else

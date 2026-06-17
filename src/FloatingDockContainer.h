@@ -33,7 +33,7 @@
 
 #include <QRubberBand>
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 #include <QDockWidget>
 #define tFloatingWidgetBase QDockWidget
 #else
@@ -181,7 +181,7 @@ protected: // reimplements QWidget
 #ifdef Q_OS_MACOS
 	virtual bool event(QEvent *e) override;
     virtual void moveEvent(QMoveEvent *event) override;
-#elif defined(Q_OS_UNIX)
+#elif defined(Q_OS_UNIX) && !defined(Q_OS_WASM)
 	virtual void moveEvent(QMoveEvent *event) override;
 	virtual void resizeEvent(QResizeEvent *event) override;
 	virtual bool event(QEvent *e) override;
@@ -269,7 +269,7 @@ public:
 	 */
 	void finishDropOperation();
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     /**
 	 * This is a function that responds to FloatingWidgetTitleBar::maximizeRequest()
 	 * Maximize or normalize the container size.

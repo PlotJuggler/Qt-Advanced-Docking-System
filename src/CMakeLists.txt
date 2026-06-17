@@ -10,11 +10,11 @@ else()
 endif()
 
 set(ads_DEP_LIBS Core Gui Widgets)
-if (UNIX AND NOT APPLE AND QT_VERSION_MAJOR STREQUAL "6" AND QT_VERSION_MINOR GREATER 8)
+if (UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND QT_VERSION_MAJOR STREQUAL "6" AND QT_VERSION_MINOR GREATER 8)
     set(ads_DEP_LIBS Core Gui GuiPrivate Widgets)
 endif()
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${ads_DEP_LIBS} REQUIRED)
-if (UNIX AND NOT APPLE AND ((QT_VERSION_MAJOR STREQUAL "6" AND QT_VERSION_MINOR GREATER 8) OR QT_VERSION_MAJOR STREQUAL "5"))
+if (UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND ((QT_VERSION_MAJOR STREQUAL "6" AND QT_VERSION_MINOR GREATER 8) OR QT_VERSION_MAJOR STREQUAL "5"))
      include_directories(${Qt${QT_VERSION_MAJOR}Gui_PRIVATE_INCLUDE_DIRS})
 endif()
 
@@ -73,7 +73,7 @@ set(ads_HEADERS
     ResizeHandle.h
 )
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-if (UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
     set(ads_SRCS linux/FloatingWidgetTitleBar.cpp ${ads_SRCS})
     set(ads_HEADERS linux/FloatingWidgetTitleBar.h ${ads_HEADERS})
 endif()
@@ -96,11 +96,11 @@ target_link_libraries(${library_name} PUBLIC Qt${QT_VERSION_MAJOR}::Core
                                                Qt${QT_VERSION_MAJOR}::Gui 
                                                Qt${QT_VERSION_MAJOR}::Widgets)
 
-if(UNIX AND NOT APPLE AND QT_VERSION_MAJOR STREQUAL "6")
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND QT_VERSION_MAJOR STREQUAL "6")
     target_link_libraries(${library_name} PRIVATE Qt6::GuiPrivate) #needed for <qpa/qplatformnativeinterface.h>
 endif()
 
-if (UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
   if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
       find_package(X11 REQUIRED)
       target_link_libraries(${library_name} PUBLIC X11::xcb)

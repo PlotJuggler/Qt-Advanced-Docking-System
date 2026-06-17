@@ -64,7 +64,7 @@
 #include "DockComponentsFactory.h"
 
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 #include "linux/FloatingWidgetTitleBar.h"
 #endif
 
@@ -212,7 +212,7 @@ void DockManagerPrivate::loadStylesheet()
 	QString FileName = ":ads/stylesheets/";
 	FileName += CDockManager::testConfigFlag(CDockManager::FocusHighlighting)
 		? "focus_highlighting" : "default";
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     FileName += "_linux";
 #endif
     FileName += ".css";
@@ -534,7 +534,7 @@ CDockManager::CDockManager(QWidget *parent) :
 
 	window()->installEventFilter(this);
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     connect(qApp, &QApplication::focusWindowChanged, this, [this](QWindow* focusWindow)
     {
         if (!focusWindow)
@@ -650,7 +650,7 @@ void CDockManager::setComponentsFactory(QSharedPointer<ads::CDockComponentsFacto
 
 
 //============================================================================
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 bool CDockManager::eventFilter(QObject *obj, QEvent *e)
 {
 	// Emulate Qt:Tool behaviour.

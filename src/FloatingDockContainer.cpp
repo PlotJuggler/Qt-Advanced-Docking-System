@@ -52,7 +52,7 @@
 #pragma comment(lib, "User32.lib")
 #endif
 #endif
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 #include "linux/FloatingWidgetTitleBar.h"
 #include <xcb/xcb.h>
 #endif
@@ -375,7 +375,7 @@ struct FloatingDockContainerPrivate
 	bool Hiding = false;
 	bool AutoHideChildren = true;
 	bool HideContentOnNextHide = false;
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     QWidget* MouseEventHandler = nullptr;
     CFloatingWidgetTitleBar* TitleBar = nullptr;
 	bool IsResizing = false;
@@ -426,7 +426,7 @@ struct FloatingDockContainerPrivate
 
 	void setWindowTitle(const QString &Text)
 	{
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 		if (TitleBar)
 		{
 			TitleBar->setTitle(Text);
@@ -549,7 +549,7 @@ void FloatingDockContainerPrivate::updateDropOverlays(const QPoint &GlobalPos)
 		return;
 	}
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 	// Prevent display of drop overlays and docking as long as a model dialog
 	// is active
     if (qApp->activeModalWidget())
@@ -664,7 +664,7 @@ CFloatingDockContainer::CFloatingDockContainer(CDockManager *DockManager) :
 	connect(d->DockContainer, SIGNAL(dockAreasRemoved()), this,
 	    SLOT(onDockAreasAddedOrRemoved()));
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 	QDockWidget::setWidget(d->DockContainer);
 	QDockWidget::setFeatures(QDockWidget::DockWidgetClosable
 		| QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -829,7 +829,7 @@ void CFloatingDockContainer::changeEvent(QEvent *event)
 			ADS_PRINT("FloatingWidget::changeEvent QEvent::ActivationChange ");
 			d->zOrderIndex = ++zOrderCounterFloating;
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 			if (d->DraggingState == DraggingFloatingWidget)
 			{
 				d->titleMouseReleaseEvent();
@@ -854,7 +854,7 @@ void CFloatingDockContainer::changeEvent(QEvent *event)
 				this->showMaximized();
 			}
 		}
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
         if (d->TitleBar)
         {
             d->TitleBar->setVisible(!(isFloating() && isFullScreen()));
@@ -1027,7 +1027,7 @@ void CFloatingDockContainer::hideEvent(QHideEvent *event)
 void CFloatingDockContainer::showEvent(QShowEvent *event)
 {
 	Super::showEvent(event);
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     if (CDockManager::testConfigFlag(CDockManager::FocusHighlighting))
     {
         this->window()->activateWindow();
@@ -1040,7 +1040,7 @@ void CFloatingDockContainer::showEvent(QShowEvent *event)
 void CFloatingDockContainer::startFloating(const QPoint &DragStartMousePos,
     const QSize &Size, eDragState DragState, QWidget *MouseEventHandler)
 {
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     if (!isMaximized())
     {
 		resize(Size);
@@ -1177,7 +1177,7 @@ bool CFloatingDockContainer::restoreState(CDockingStateReader &Stream,
 		return false;
 	}
 	onDockAreasAddedOrRemoved();
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 	if(d->TitleBar)
 	{
 		d->TitleBar->setMaximizedIcon(windowState() == Qt::WindowMaximized);
@@ -1232,7 +1232,7 @@ void CFloatingDockContainer::finishDropOperation()
 void CFloatingDockContainer::finishDragging()
 {
 	ADS_PRINT("CFloatingDockContainer::finishDragging");
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 	setWindowOpacity(1);
 	activateWindow();
 	if (d->MouseEventHandler)
@@ -1347,7 +1347,7 @@ void CFloatingDockContainer::moveEvent(QMoveEvent *event)
 #endif
 
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 //============================================================================
 void CFloatingDockContainer::onMaximizeRequest()
 {
