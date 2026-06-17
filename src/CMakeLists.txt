@@ -52,7 +52,7 @@ set(ads_DEP_LIBS
 
 # Qt 6.9+ provides the required private GUI headers through the GuiPrivate
 # component. Request it explicitly on supported Unix platforms.
-if(UNIX AND NOT APPLE
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN
    AND QT_VERSION_MAJOR STREQUAL "6"
    AND QT_VERSION_MINOR GREATER_EQUAL 9)
     list(APPEND ads_DEP_LIBS GuiPrivate)
@@ -128,7 +128,7 @@ set(ads_HEADERS
 )
 
 # Linux and other Unix platforms use a custom floating-window title bar.
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
     list(PREPEND ads_SRCS
         linux/FloatingWidgetTitleBar.cpp
     )
@@ -256,7 +256,7 @@ target_include_directories(
 # an implementation detail of QtAdvancedDockingSystem and must not become
 # part of its public interface.
 # ---------------------------------------------------------------------------
-if(UNIX AND NOT APPLE
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN
    AND (QT_VERSION_MAJOR STREQUAL "5"
         OR (QT_VERSION_MAJOR STREQUAL "6"
             AND QT_VERSION_MINOR GREATER_EQUAL 9)))
@@ -280,7 +280,7 @@ target_link_libraries(
 
 # ADS uses private Qt GUI APIs on Unix systems other than macOS,
 # specifically qpa/qplatformnativeinterface.h.
-if(UNIX AND NOT APPLE AND QT_VERSION_MAJOR STREQUAL "6")
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND QT_VERSION_MAJOR STREQUAL "6")
     target_link_libraries(
         ${library_name}
         PRIVATE
@@ -292,7 +292,7 @@ endif()
 # Platform-specific dependencies
 # ---------------------------------------------------------------------------
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
     if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
         find_package(X11 REQUIRED)
 

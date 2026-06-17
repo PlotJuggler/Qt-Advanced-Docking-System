@@ -331,7 +331,7 @@ CFloatingDragPreview::CFloatingDragPreview(QWidget* Content, QWidget* parent) :
 	{
 		setWindowFlags(
 			Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 		auto Flags = windowFlags();
 		Flags |= Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint;
 		setWindowFlags(Flags);
@@ -351,7 +351,7 @@ CFloatingDragPreview::CFloatingDragPreview(QWidget* Content, QWidget* parent) :
 		setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
 		setAttribute(Qt::WA_NoSystemBackground);
 		setAttribute(Qt::WA_TranslucentBackground);
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 		auto Flags = windowFlags();
 		Flags |= Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint;
 		setWindowFlags(Flags);

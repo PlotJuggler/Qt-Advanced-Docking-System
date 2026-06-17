@@ -27,7 +27,7 @@
 #include "DockManager.h"
 #include "DockAreaTitleBar.h"
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 #include "linux/FloatingWidgetTitleBar.h"
 #endif
 
@@ -44,7 +44,7 @@ struct DockFocusControllerPrivate
 	QPointer<CDockWidget> FocusedDockWidget = nullptr;
 	QPointer<CDockAreaWidget> FocusedArea = nullptr;
 	QPointer<CDockWidget> OldFocusedDockWidget = nullptr;
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
      QPointer<CFloatingDockContainer> FloatingWidget = nullptr;
 #endif
 	CDockManager* DockManager;
@@ -85,7 +85,7 @@ static void updateDockAreaFocusStyle(CDockAreaWidget* DockArea, bool Focused)
 
 
 //===========================================================================
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 static void updateFloatingWidgetFocusStyle(CFloatingDockContainer* FloatingWidget, bool Focused)
 {
 	if (FloatingWidget->hasNativeTitleBar())
@@ -170,7 +170,7 @@ void DockFocusControllerPrivate::updateDockWidgetFocus(CDockWidget* DockWidget)
     }
 
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
 	// This code is required for styling the floating widget titlebar for linux
 	// depending on the current focus state
 	if (FloatingWidget != NewFloatingWidget)
@@ -289,7 +289,7 @@ void CDockFocusController::onApplicationFocusChanged(QWidget* focusedOld, QWidge
 		DockWidget = internal::findParent<CDockWidget*>(focusedNow);
 	}
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS) && !defined(Q_OS_WASM)
     if (!DockWidget)
 	{
 		return;
