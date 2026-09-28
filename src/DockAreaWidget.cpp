@@ -72,9 +72,10 @@ static bool isAutoHideFeatureEnabled()
 /**
  * Internal dock area layout mimics stack layout but only inserts the current
  * widget into the internal QLayout object.
- * \warning Only the current widget has a parent. All other widgets
- * do not have a parent. That means, a widget that is in this layout may
- * return nullptr for its parent() function if it is not the current widget.
+ * The other widgets are hidden and stay parented to the dock area: a
+ * render-to-texture widget (QRhiWidget, QOpenGLWidget) keeps its graphics
+ * resources across tab switches, where a parentless (top-level) state would
+ * make it release and rebuild them every time.
  */
 class CDockAreaLayout
 {
@@ -104,11 +105,11 @@ public:
 
 	/**
 	 * Inserts the widget at the given index position into the internal widget
-	 * list
+	 * list. The widget keeps its parent: CDockAreaWidget::insertDockWidget()
+	 * reparents it to the area right after, and a reordered tab stays in it.
 	 */
 	void insertWidget(int index, QWidget* Widget)
 	{
-		Widget->setParent(nullptr);
 		if (index < 0)
 		{
 			index = m_Widgets.count();
@@ -128,18 +129,15 @@ public:
 	}
 
 	/**
-	 * Removes the given widget from the layout
+	 * Removes the given widget from the layout. The widget keeps its parent:
+	 * CDockAreaWidget::removeDockWidget() unparents it right after, and a
+	 * reordered tab is inserted again at once.
 	 */
 	void removeWidget(QWidget* Widget)
 	{
 		if (currentWidget() == Widget)
 		{
-			auto LayoutItem = m_ParentLayout->takeAt(1);
-			if (LayoutItem)
-			{
-				LayoutItem->widget()->setParent(nullptr);
-			}
-			delete LayoutItem;
+			delete m_ParentLayout->takeAt(1);
 			m_CurrentWidget = nullptr;
 			m_CurrentIndex = -1;
 		}
@@ -181,12 +179,9 @@ public:
 
 		if (m_CurrentWidget)
 		{
-			auto LayoutItem = m_ParentLayout->takeAt(1);
-			if (LayoutItem)
-			{
-				LayoutItem->widget()->setParent(nullptr);
-			}
-			delete LayoutItem;
+			// Out of the layout (only the current widget takes part in sizing),
+			// hidden below, still parented.
+			delete m_ParentLayout->takeAt(1);
 		}
 
 		m_ParentLayout->insertWidget(1, next);
