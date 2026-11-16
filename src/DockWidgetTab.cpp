@@ -393,6 +393,21 @@ void DockWidgetTabPrivate::waylandPreviewMove(QMouseEvent* ev)
 	// (DraggingFloatingWidget state on Wayland; see startFloating()). While the
 	// cursor stays inside the source window the preview just follows it.
 	auto Preview = static_cast<CFloatingDragPreview*>(FloatingWidget);
+	const bool Floatable = (DockArea->dockWidgetsCount() > 1)
+		? DockWidget->features().testFlag(CDockWidget::DockWidgetFloatable)
+		: DockArea->features().testFlag(CDockWidget::DockWidgetFloatable);
+	// Non-floatable content never becomes a floating window: past the window's
+	// edge the in-window preview keeps following the cursor, and the release
+	// goes through CFloatingDragPreview::finishDragging(), which refuses to float
+	// it, as on the other platforms.
+	if (!Floatable)
+	{
+		if (Preview)
+		{
+			Preview->moveFloating(GlobalPos);
+		}
+		return;
+	}
 	if (CFloatingDockContainer::waylandMoveOrLeaveInWindowPreview(
 			Preview, _this->window(), GlobalPos))
 	{

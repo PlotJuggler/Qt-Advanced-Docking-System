@@ -132,7 +132,7 @@ struct DockManagerPrivate
 	QSize ToolBarIconSizeFloating = QSize(24, 24);
 	CDockWidget::DockWidgetFeatures LockedDockWidgetFeatures;
 	QSharedPointer<ads::CDockComponentsFactory> ComponentFactory {ads::CDockComponentsFactory::factory()};
-	bool CurrentStylesheetDark;
+	bool CurrentStylesheetDark = false;
 
 	/**
 	 * Private data constructor
